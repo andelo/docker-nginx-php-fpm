@@ -24,6 +24,8 @@ ENV PHP_BUILD_DEPS bzip2 \
 		libxslt1-dev \
 		libxml2-dev
 ENV LANG C.UTF-8
+ENV WEB_ROOT /var/www/current
+ENV APP_HOME /home/app
 
 RUN apt-get update && apt-get install -y ca-certificates curl libxml2 autoconf \
     gcc libc-dev make pkg-config nginx-full \
@@ -76,20 +78,20 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 6E4F6AB321FDC07F2C332E3A
 	&& ln -s /opt/composer.phar /usr/local/bin/composer
 
 RUN groupadd -r app -g 433 && \
-	mkdir /home/app && \
-	mkdir -p /var/wwwroot/default && \
-	useradd -u 431 -r -g app -d /home/app -s /usr/sbin/nologin -c "Docker image user for web application" app && \
-	chown -R app:app /home/app /var/wwwroot/default && \
-	chmod 700 /home/app && \
-	chmod 711 /var/wwwroot/default
-
+	mkdir $APP_HOME && \
+	mkdir -p $WEB_ROOT && \
+	useradd -u 431 -r -g app -d $APP_HOME -s /usr/sbin/nologin -c "Docker image user for web application" app && \
+	chown -R app:app $APP_HOME $WEB_ROOT && \
+	chmod 700 $APP_HOME && \
+	chmod 711 $WEB_ROOT
+        
 COPY files / 
 
 #
 # Docker properties
 #
 
-VOLUME ["/var/wwwroot/default", "/etc/nginx"]
+VOLUME ["$WEB_ROOT", "/etc/nginx"]
 
 EXPOSE 80
 EXPOSE 443

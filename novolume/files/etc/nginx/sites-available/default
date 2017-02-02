@@ -3,7 +3,7 @@ server {
 	listen [::]:80 default_server;
 	server_name _;
 
-	root /var/wwwroot/default;
+	root /var/www/current;
 
 	index index.html index.php index.htm;
 

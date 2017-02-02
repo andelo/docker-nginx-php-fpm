@@ -2,8 +2,9 @@ server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
 	server_name _;
-
-	root /var/wwwroot/default;
+        # NOTE: we would want to use $WEB_ROOT here from system env
+        # but it's a bit hacky since nginx does not import env vars.        
+	root /var/www/current;
 
 	index index.html index.php index.htm;
 
@@ -12,7 +13,7 @@ server {
 	}
 
 	location ~ \.php$ {
-		include snippets/fastcgi-php.conf;
+		include snippets/fastcgi-php.conf;                
 		fastcgi_pass 127.0.0.1:9000;
 	}
 }
